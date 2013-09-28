@@ -1,6 +1,6 @@
 //Maya ASCII 2012 scene
 //Name: pig.ma
-//Last modified: Fri, Sep 27, 2013 09:38:32 PM
+//Last modified: Fri, Sep 27, 2013 09:42:01 PM
 //Codeset: 1252
 requires maya "2012";
 requires "stereoCamera" "10.0";
@@ -1011,7 +1011,7 @@ createNode objectSet -n "textureEditorIsolateSelectSet";
 	setAttr ".ihi" 0;
 	setAttr ".fo" yes;
 createNode file -n "file1";
-	setAttr ".ftn" -type "string" "C:/Users/Alix/Dropbox/CoinDozer Art/3d/Prizes/textures/pig_texture.tga";
+	setAttr ".ftn" -type "string" "C:/Users/Alix/Documents/speed_run/ScarecrowTrufflePro/Assets/sources/pig_texture.psd";
 createNode place2dTexture -n "place2dTexture1";
 createNode groupId -n "groupId5";
 	setAttr ".ihi" 0;
