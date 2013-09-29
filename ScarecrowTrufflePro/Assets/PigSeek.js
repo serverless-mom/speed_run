@@ -11,7 +11,7 @@
 
 
 
-	//Requires that the scarecrow be tagged with "Scarecrow" 
+    //Requires that the scarecrow be tagged with "Scarecrow" 
     var waypoints : Transform[];
     //How close you have to be to 'find' the waypoint
     var waypointRadius : float  = 10;
@@ -21,6 +21,9 @@
     var speed : float = 9.0;
     var scarecrowRadius = 1;
     var eatTime = 100;
+    var bravery : int = 10;
+    var pigHP : int = 3;
+    var randomWalkDistance : int = 42;
  
     private var targetHeading : Vector3;
     private var currentHeading : Vector3;
@@ -35,6 +38,8 @@
     private var runaway : boolean;
     private var truffleLeft : int; 
     private var retreatTime : int;
+    private var wanderTime : int;
+
 
  
  
@@ -44,32 +49,27 @@
         target = waypoints[targetwaypoint].position;
     }
     function NegativeTarget(){
-        currentHeading = targetHeading;
+        currentHeading = -currentHeading;
     }
-   function Start() {
-        retreatTime = 10;
-        scarecrow=GameObject.FindWithTag("Player");
-        moving = true;
-        eating = false;
-        xform = transform;
-        currentHeading = xform.forward;
-        if(waypoints.Length<=0)
-        {
-            //Debug.Log("No waypoints on "+name);
-            enabled = false;
-        }
-        targetwaypoint = 0;
-        SetTarget();
+    function TargetScarecrow(){
+        target = scarecrow.transform.position;
     }
-    function EndGame(){
-            targetwaypoint = 0;
-            GameStates.gameOver = true;
+    function FaceScarecrow(){
+        xform.LookAt(scarecrow.transform.position);
     }
+    function RandomWalk(){
+        TargetScarecrow();
+        wanderTime = randomWalkDistance;
+        Debug.Log("Random Walk?"+target);
+
+    }
+
     function MoveForward(){
-        xform.position +=currentHeading * Time.deltaTime * speed;
+        xform.position +=currentHeading * .1 * speed;
         xform.LookAt(xform.position+currentHeading);
     }
     function EatTruffle(){
+        animation.Play("pig_dig");
         eating=true;
         truffleLeft=eatTime;
     }
@@ -79,23 +79,42 @@
             FinishTruffle();
         }
     }
+    //eat a truffle, gain a life point, and either on to the next one or game over
     function FinishTruffle(){
-        //Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
+        Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
         eating=false;
+        pigHP++;
+        NextTruffle();
+    }
+    function NextTruffle(){
         targetwaypoint++;
         if(targetwaypoint>=waypoints.Length)
         {
             EndGame();
+            animation.Play("pig_idle");
         }
         else{
             SetTarget();
+            animation.Play("pig_walk");
         }
     }
+
+//Collision Results
     function GetHurt(){
-        NegativeTarget();
-        //Debug.Log("Butthurt");
-        runaway = true;
+        pigHP--;
+        Debug.Log("HP down to "+pigHP);
+        //probably some damage mechanics
+        TurnAway();
+        NextTruffle();
     }
+    //set inverse vector to seem to run away
+    function TurnAway(){
+        NegativeTarget();
+        runaway = true;
+        retreatTime = bravery;
+
+    }
+    //called in Update function when runaway=true    
     function Retreat(){
         if (retreatTime>0){
             retreatTime--;
@@ -103,57 +122,114 @@
         else
             BeBrave ();
     }
+    //undo Retreat settings
     function BeBrave (){
         SetTarget();
-        runaway=false;
+        runaway=false;            
+        retreatTime = bravery;
+
     }
+    function Die(){
+        animation["pig_death"].wrapMode = WrapMode.Once;
+        animation.Play("pig_death");
+    EndGame();
+    }
+    function EndGame(){
+            speed=0;
+            targetwaypoint = 0;
+            GameStates.gameOver = true;
+    }
+    function Start() {
+        retreatTime = 10;
+        scarecrow=GameObject.FindWithTag("Player");
+        moving = true;
+        eating = false;
+        xform = transform;
+        currentHeading = xform.forward;
+        if(waypoints.Length<=0)
+        {
+            Debug.Log("No waypoints on "+name);
+            enabled = false;
+        }
+        targetwaypoint = 0;
+        SetTarget();
+        animation.Play("pig_walk");
 
-
+    }
  
     // calculates a new heading
     function FixedUpdate() {
-        targetHeading = target - xform.position;
-        currentHeading = Vector3.Lerp(currentHeading,targetHeading,damping*Time.deltaTime);
+        if (!GameStates.gameOver){
+                targetHeading = target - xform.position;
+                currentHeading = Vector3.Lerp(currentHeading,targetHeading,damping);
+        }
     }
+    
  
-    // moves us along current heading
     function Update(){
-		var scarecrowDistance = Vector3.Distance(transform.position, scarecrow.transform.position);
-		//test for range to scarecrow
-		if (scarecrowDistance<=scarecrowRadius){
-			//Debug.Log("Too Close To Farmer");
-            scared=true;
-        }
-        if (scared==true && scarecrowDistance>=scarecrowRadius){
-            //Debug.Log("farmer moved away");
-            scared=false;
-        }
-        if(Vector3.Distance(xform.position,waypoints[targetwaypoint].position)<=waypointRadius && !eating)
-        {
-            EatTruffle();
-        }
-        if (eating==true){
-            ChompTruffle();
-        }
+        if (!GameStates.gameOver){
+            diceRoll = (Random.value);
+            var scarecrowDistance = Vector3.Distance(transform.position, scarecrow.transform.position);
+            //test for range to scarecrow
+            if (scarecrowDistance<=scarecrowRadius){
+                Debug.Log("Too Close To Farmer");
+                scared=true;
+                animation.Play("pig_idle");
+            }
+            if (scared){
+                FaceScarecrow();
+            }
+            if (scared==true && scarecrowDistance>=scarecrowRadius){
+                Debug.Log("farmer moved away");
+                scared=false;
+                animation.Play("pig_walk");
+            }
 
-        if (!eating && !scared){
-            MoveForward();
-        }
+            if (diceRoll>.99){
+                RandomWalk();
+            }
+            if (wanderTime!=0){
+                wanderTime--;
+            }
+            else SetTarget();
+            if(Vector3.Distance(xform.position,waypoints[targetwaypoint].position)<=waypointRadius && !eating)
+            {
+                EatTruffle();
+            }
+            if (eating==true){
+                ChompTruffle();
+            }
+            // moves us along current heading
+            if (!eating && !scared){
+                MoveForward();
+            }
 
-        if (runaway){
-            Retreat();
+            if (runaway){
+                Retreat();
+            }
+            if (pigHP<=0){
+                Debug.Log("ack");
+                Die();
         }
+    }
 
 
     }
+//Hit the edge or a vine
+    function OnTriggerEnter (collider : Collider){
+        Debug.Log("I hit "+collider.tag);
 
-    function OnTriggerEnter (pig_final : Collider){
-        //Debug.Log("I hit something");
-        GetHurt();
+        if(collider.tag=="Wall"){
+            TurnAway();
+
+        }
+        else if(collider.tag=="Vine"){
+            GetHurt();
+        }
         triggered = true;
     }
         function OnTriggerExit (){
-        //Debug.Log("not hitting nothing");
+        Debug.Log("not hitting nothing");
         triggered = false;
     }
 
