@@ -1,9 +1,14 @@
 ﻿#pragma strict
+var dissapoint : AudioSource[];
 
 function Start () {
 }
 
 function Update () {
+  if (transform.position.x<-10){
+    GameStates.gameOver=true;
+  }
+
 }
 
 
@@ -19,8 +24,12 @@ function OnTriggerStay (other : Collider) {
 
   else if(other.tag == "Pickup"){
     Debug.Log ("TryingToPick Up Mushroom");
+        Destroy(other.gameObject);
     GameStates.scarecrowScore++;
-    Destroy(other.gameObject);
+    var clipPick = Random.Range(0,2);
+    dissapoint[clipPick].Play();
+    GameStates.swiped = GameStates.mushroomTimer;
+
   }
 
 }

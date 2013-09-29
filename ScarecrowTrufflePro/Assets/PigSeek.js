@@ -9,10 +9,16 @@
 //,,see my other sites http://www.industrialclubs.com/
 //Significant re-writes by Toby Fee
 
+@script RequireComponent(AudioSource)
 
-
-    //Requires that the scarecrow be tagged with "Scarecrow" 
+    //Requires that the scarecrow be tagged with "Player" 
     var waypoints : Transform[];
+    var distract : AudioSource[];
+    var squeal : AudioSource[];
+    var nomnom : AudioSource[];
+    var gulp :  AudioSource[];
+
+
     //How close you have to be to 'find' the waypoint
     var waypointRadius : float  = 10;
     //how fast the vector approaches the actual path to waypoint
@@ -73,6 +79,8 @@
         xform.LookAt(xform.position+currentHeading);
     }
     function EatTruffle(){
+        var clipPick = Random.Range(0,2);
+        nomnom[clipPick].Play();
         animation.Play("pig_dig");
         eating=true;
         truffleLeft=eatTime;
@@ -86,18 +94,25 @@
     }
     //eat a truffle, gain a life point, and either on to the next one or game over
     function FinishTruffle(){
-        Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
-        eating=false;
-        pigHP++;
-        NextTruffle();
-        GameStates.pigScore ++;
+        if (GameStates.swiped==0){
+            Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
+            pigHP++;
+            var clipPick = Random.Range(0,2);
+            gulp[clipPick].Play();
+            GameStates.pigScore ++;
+        }
+    else {
+        Debug.Log ("I didn't get a truffle :("); 
+    }
+    eating=false;
+    NextTruffle();
     }
     function NextTruffle(){
         targetwaypoint++;
         if(targetwaypoint>=waypoints.Length)
         {
+             animation.Play("pig_idle");
             EndGame();
-            animation.Play("pig_idle");
         }
         else{
             SetTarget();
@@ -107,6 +122,8 @@
 
 //Collision Results
     function GetHurt(){
+        var clipPick = Random.Range(0,2);
+        squeal[clipPick].Play();
         pigHP--;
         Debug.Log("HP down to "+pigHP);
         TurnAway();
@@ -115,7 +132,7 @@
     }
     //set inverse vector to seem to run away
     function TurnAway(){
-        Debug.Log("Calling TurnAway on "+name);
+        //Debug.Log("Calling TurnAway on "+name);
         NegativeTarget();
         runaway = true;
         retreatTime = cowardice;
@@ -129,7 +146,7 @@
         }
         else{
             BeBrave ();
-            Debug.Log("Ran out of retreatTime, turning back toward danger");
+           // Debug.Log("Ran out of retreatTime, turning back toward danger");
         }
     }
     //undo Retreat settings
@@ -185,6 +202,8 @@
             if (scarecrowDistance<=scarecrowRadius){
                 //Debug.Log("Too Close To Farmer");
                 distracted=true;
+                var clipPick = Random.Range(0,2);
+                //sdistract[clipPick].Play();
                 animation.Play("pig_idle");
             }
             if (distracted){

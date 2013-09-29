@@ -3,10 +3,12 @@ var texture : Texture2D;
 static var guiDepth : int = 0;
 
 function OnGUI(){
+				GUI.backgroundColor = Color.clear;
+
 	GUI.DrawTexture(Rect(0.0f, 0.0f, Screen.width, Screen.height), texture);
-		if (GUI.Button (Rect (Screen.width / 2 + 130, Screen.height / 2 + 150, 200, 50), "Start Game")) {
+		if (GUI.Button (Rect (500, 430, 350, 170), "   ")) {
 			guiDepth = 1;
-		print ("Let's Go!");
+		Application.LoadLevel("Level1");
 	}
 
 }
