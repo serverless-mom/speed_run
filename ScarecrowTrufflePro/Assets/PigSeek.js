@@ -55,7 +55,7 @@
         currentHeading = xform.forward;
         if(waypoints.Length<=0)
         {
-            Debug.Log("No waypoints on "+name);
+            //Debug.Log("No waypoints on "+name);
             enabled = false;
         }
         targetwaypoint = 0;
@@ -80,7 +80,7 @@
         }
     }
     function FinishTruffle(){
-        Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
+        //Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
         eating=false;
         targetwaypoint++;
         if(targetwaypoint>=waypoints.Length)
@@ -93,7 +93,7 @@
     }
     function GetHurt(){
         NegativeTarget();
-        Debug.Log("Butthurt");
+        //Debug.Log("Butthurt");
         runaway = true;
     }
     function Retreat(){
@@ -121,11 +121,11 @@
 		var scarecrowDistance = Vector3.Distance(transform.position, scarecrow.transform.position);
 		//test for range to scarecrow
 		if (scarecrowDistance<=scarecrowRadius){
-			Debug.Log("Too Close To Farmer");
+			//Debug.Log("Too Close To Farmer");
             scared=true;
         }
         if (scared==true && scarecrowDistance>=scarecrowRadius){
-            Debug.Log("farmer moved away");
+            //Debug.Log("farmer moved away");
             scared=false;
         }
         if(Vector3.Distance(xform.position,waypoints[targetwaypoint].position)<=waypointRadius && !eating)
@@ -148,12 +148,12 @@
     }
 
     function OnTriggerEnter (pig_final : Collider){
-        Debug.Log("I hit something");
+        //Debug.Log("I hit something");
         GetHurt();
         triggered = true;
     }
         function OnTriggerExit (){
-        Debug.Log("not hitting nothing");
+        //Debug.Log("not hitting nothing");
         triggered = false;
     }
 

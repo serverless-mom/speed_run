@@ -53,6 +53,10 @@
      <Compile Include="Assets\MushroomLocation.js" />
      <Compile Include="Assets\PigSeek.js" />
      <Compile Include="Assets\animations.js" />
+     <Compile Include="Assets\box.js" />
+     <Compile Include="Assets\enemy.js" />
+     <Compile Include="Assets\meleeCollision.js" />
+     <Compile Include="Assets\melleSwing.js" />
      <Compile Include="Assets\spawn.js" />
      <None Include="Assets\Simple RPG Camera\Documentation\readme.txt" />
      <None Include="Assets\DB\Models\Animation.txt" />

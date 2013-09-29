@@ -48,7 +48,7 @@ public class SimpleRpgCamera : MonoBehaviour
 	private Quaternion _rotation;
 	private Vector2 _input_rotation;
 
-	private bool _controllable = false;
+	private bool _controllable = true;
 
 	private Transform _t;
 

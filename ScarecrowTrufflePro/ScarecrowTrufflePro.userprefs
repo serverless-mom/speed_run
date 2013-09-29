@@ -1,14 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/PigSeek.js">
-    <Files>
-      <File FileName="Assets/animations.js" Line="8" Column="31" />
-      <File FileName="Assets/scripts/SimpleRpgPlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets/scripts/SimpleRpgCamera.cs" Line="1" Column="1" />
-      <File FileName="Assets/spawn.js" Line="1" Column="1" />
-      <File FileName="Assets/PigSeek.js" Line="70" Column="32" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
