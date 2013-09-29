@@ -41,11 +41,10 @@
     // Use this for initialization
 
     function SetTarget(){
-    Debug.Log(waypoints[targetwaypoint].position);
         target = waypoints[targetwaypoint].position;
     }
     function NegativeTarget(){
-        target = -target;
+        currentHeading = targetHeading;
     }
    function Start() {
         retreatTime = 10;
@@ -94,6 +93,7 @@
     }
     function GetHurt(){
         NegativeTarget();
+        Debug.Log("Butthurt");
         runaway = true;
     }
     function Retreat(){
@@ -147,7 +147,7 @@
 
     }
 
-    function OnTriggerEnter (){
+    function OnTriggerEnter (pig_final : Collider){
         Debug.Log("I hit something");
         GetHurt();
         triggered = true;
