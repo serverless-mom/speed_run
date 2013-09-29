@@ -1,23 +1,23 @@
 print "Starting maya loading and fbx conversion \n";
 	
-if (`file -q -exists "/Users/McDirty/speed_run/ScarecrowTrufflePro/Assets/Vine_Temp.mb"`)
+if (`file -q -exists "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Assets/Vine_Temp.mb"`)
 {		
-	file -o "/Users/McDirty/speed_run/ScarecrowTrufflePro/Assets/Vine_Temp.mb";
+	file -o "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Assets/Vine_Temp.mb";
 	FBXExportEmbeddedTextures -v false;
 	// FBXExportHardEdges -v true;
 	FBXExportApplyConstantKeyReducer -v false;
 	FBXExportShowUI -v false;
 
 	print "Before fbx export\n";
-	FBXExport -f "/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/ExportedFBXFile.fbx";
+	FBXExport -f "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/ExportedFBXFile.fbx";
 	print "after fbx export\n";
 }
 else
 	print "Could not open Maya file.";
 
 
-system ("rm \"/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/CommandPipe\"");
+system ("rm \"/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/CommandPipe\"");
 
-$donepipeKill = `fopen "/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/SyncPipeKill" "w"`;
+$donepipeKill = `fopen "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/SyncPipeKill" "w"`;
 fwrite $donepipeKill "Done";
 fclose $donepipeKill;

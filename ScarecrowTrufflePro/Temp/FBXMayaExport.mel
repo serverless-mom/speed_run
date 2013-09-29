@@ -1,13 +1,13 @@
 while (1)
 {	
-	if (`filetest -r "/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/CommandPipe"`)
+	if (`filetest -r "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/CommandPipe"`)
 	{
 		$exportNormals = 0;
 		$exportTangents = 0;
 		$bakeCommand = "";
 	
 		// Parse settings
-		$waitpipe = `fopen "/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/CommandPipe" "r"`;
+		$waitpipe = `fopen "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/CommandPipe" "r"`;
 		$filename = `fgetline $waitpipe`;
 		
 		for ($i = 0; $i < 3; ++$i) 
@@ -136,16 +136,16 @@ while (1)
 				FBXExportShowUI -v false;
 
 				print "Before fbx export\n";
-				FBXExport -f "/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/ExportedFBXFile.fbx";
+				FBXExport -f "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/ExportedFBXFile.fbx";
 				print "after fbx export\n";
 			}
 			else
 				print "Could not open Maya file.";
 
 			// TODO: We should use sysFile, so we don't have to have two separate mel scripts for OSX/Windows
-			system ("rm \"/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/CommandPipe\"");
+			system ("rm \"/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/CommandPipe\"");
 
-			$donepipe = `fopen "/Users/McDirty/speed_run/ScarecrowTrufflePro/Temp/SyncPipe" "w"`;
+			$donepipe = `fopen "/Users/toby/Documents/Creative/speed_run/ScarecrowTrufflePro/Temp/SyncPipe" "w"`;
 			fwrite $donepipe "Done";
 			fclose $donepipe;
 			print "Finished maya loading and fbx conversion \n";

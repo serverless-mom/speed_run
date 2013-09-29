@@ -24,9 +24,9 @@ function growVine() {
 
 
 
-function onTriggerEnter(other : Collider) {
-  Debug.Log("Hit By"+other.tag);
-}
+//function onTriggerEnter(other : Collider) {
+//  Debug.Log("Hit By"+other.tag);
+//}
 
 function ApplyDamage(damage : int){
   	vine_health -= damage;
