@@ -160,7 +160,7 @@ public class SimpleRpgPlayerController : MonoBehaviour
 		{
 			if(_input_y > 0){
 				Debug.Log("walking");
-				animation.CrossFade("scarecrow_walk");
+				//animation.CrossFade("scarecrow_walk");
 				if(_running)
 				{
 					_speed = run_speed;			
