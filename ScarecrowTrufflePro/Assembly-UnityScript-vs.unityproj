@@ -49,6 +49,7 @@
      <Compile Include="Assets\DB\Scripts\FX\ParticleSetting.js" />
      <Compile Include="Assets\DB\Scripts\FX\Randomrotation.js" />
      <Compile Include="Assets\DB\Scripts\FX\Slash.js" />
+     <Compile Include="Assets\GameStates.js" />
      <Compile Include="Assets\MushroomLocation.js" />
      <Compile Include="Assets\PigSeek.js" />
      <Compile Include="Assets\animations.js" />

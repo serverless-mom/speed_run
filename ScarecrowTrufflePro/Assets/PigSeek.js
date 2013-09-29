@@ -7,7 +7,11 @@
 //remade in JavaScript by Pier Shaw 
 // URL: www.firecg.com 
 //,,see my other sites http://www.industrialclubs.com/
- 
+//Significant re-writes by Toby Fee
+
+
+
+	//Requires that the scarecrow be tagged with "Scarecrow" 
     var waypoints : Transform[];
     //How close you have to be to 'find' the waypoint
     var waypointRadius : float  = 10;
@@ -15,6 +19,8 @@
     var damping : float = 5;
     var loop : boolean = true;
     var speed : float = 9.0;
+    var scarecrowRadius = 1;
+    var eatTime = 100;
  
     private var targetHeading : Vector3;
     private var currentHeading : Vector3;
@@ -22,10 +28,30 @@
     private var xform : Transform;
     private var useRigidbody : boolean;
     private var rigidmember : Rigidbody;
+    private var scarecrow : GameObject;
+    private var target : Vector3;
+    private var eating : boolean;
+    private var scared : boolean;
+    private var runaway : boolean;
+    private var truffleLeft : int; 
+    private var retreatTime : int;
+
  
  
     // Use this for initialization
+
+    function SetTarget(){
+    Debug.Log(waypoints[targetwaypoint].position);
+        target = waypoints[targetwaypoint].position;
+    }
+    function NegativeTarget(){
+        target = -target;
+    }
    function Start() {
+        retreatTime = 10;
+        scarecrow=GameObject.FindWithTag("Player");
+        moving = true;
+        eating = false;
         xform = transform;
         currentHeading = xform.forward;
         if(waypoints.Length<=0)
@@ -34,50 +60,103 @@
             enabled = false;
         }
         targetwaypoint = 0;
-        if(rigidbody!=null)
-        {
-            useRigidbody = true;
-            rigidmember = rigidbody;
-            Debug.Log("Rigidbody is on");
-        }
-        else
-        {
-            useRigidbody = false;
-            Debug.Log("Rigidbody is off");
+        SetTarget();
+    }
+    function EndGame(){
+            targetwaypoint = 0;
+            GameStates.gameOver = true;
+    }
+    function MoveForward(){
+        xform.position +=currentHeading * Time.deltaTime * speed;
+        xform.LookAt(xform.position+currentHeading);
+    }
+    function EatTruffle(){
+        eating=true;
+        truffleLeft=eatTime;
+    }
+    function ChompTruffle(){
+        truffleLeft--;
+        if (truffleLeft == 0){
+            FinishTruffle();
         }
     }
- 
+    function FinishTruffle(){
+        Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
+        eating=false;
+        targetwaypoint++;
+        if(targetwaypoint>=waypoints.Length)
+        {
+            EndGame();
+        }
+        else{
+            SetTarget();
+        }
+    }
+    function GetHurt(){
+        NegativeTarget();
+        runaway = true;
+    }
+    function Retreat(){
+        if (retreatTime>0){
+            retreatTime--;
+        }
+        else
+            BeBrave ();
+    }
+    function BeBrave (){
+        SetTarget();
+        runaway=false;
+    }
+
+
  
     // calculates a new heading
     function FixedUpdate() {
-        targetHeading = waypoints[targetwaypoint].position - xform.position;
- 
+        targetHeading = target - xform.position;
         currentHeading = Vector3.Lerp(currentHeading,targetHeading,damping*Time.deltaTime);
     }
  
     // moves us along current heading
     function Update(){
- 
-        if(useRigidbody)
-            rigidmember.velocity = currentHeading * speed;
-        else
-            xform.position +=currentHeading * Time.deltaTime * speed;
-
-        xform.LookAt(xform.position+currentHeading);
- 
-        if(Vector3.Distance(xform.position,waypoints[targetwaypoint].position)<=waypointRadius)
-        {
-            targetwaypoint++;
-            if(targetwaypoint>=waypoints.Length)
-            {
-                targetwaypoint = 0;
-                if(!loop)
-                    enabled = false;
-            }
+		var scarecrowDistance = Vector3.Distance(transform.position, scarecrow.transform.position);
+		//test for range to scarecrow
+		if (scarecrowDistance<=scarecrowRadius){
+			Debug.Log("Too Close To Farmer");
+            scared=true;
         }
+        if (scared==true && scarecrowDistance>=scarecrowRadius){
+            Debug.Log("farmer moved away");
+            scared=false;
+        }
+        if(Vector3.Distance(xform.position,waypoints[targetwaypoint].position)<=waypointRadius && !eating)
+        {
+            EatTruffle();
+        }
+        if (eating==true){
+            ChompTruffle();
+        }
+
+        if (!eating && !scared){
+            MoveForward();
+        }
+
+        if (runaway){
+            Retreat();
+        }
+
+
     }
- 
- 
+
+    function OnTriggerEnter (){
+        Debug.Log("I hit something");
+        GetHurt();
+        triggered = true;
+    }
+        function OnTriggerExit (){
+        Debug.Log("not hitting nothing");
+        triggered = false;
+    }
+
     // draws red line from waypoint to waypoint
     function OnDrawGizmos(){
  
