@@ -5,8 +5,9 @@ function Start () {
 }
 
 function Update () {
-  if (transform.position.x<-10){
+  if (transform.position.y<-10){
     GameStates.gameOver=true;
+    Debug.Log("ending because we fell off a cliff except we didn't");
   }
 
 }
@@ -24,8 +25,10 @@ function OnTriggerStay (other : Collider) {
 
   else if(other.tag == "Pickup"){
     Debug.Log ("TryingToPick Up Mushroom");
-        Destroy(other.gameObject);
+    Destroy(other.gameObject);
     GameStates.scarecrowScore++;
+    gameGUI.foundTruffles++;
+    Debug.Log("Found Truffles going up to "+gameGUI.foundTruffles);
     var clipPick = Random.Range(0,2);
     dissapoint[clipPick].Play();
     GameStates.swiped = GameStates.mushroomTimer;

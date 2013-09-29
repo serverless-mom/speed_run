@@ -16,7 +16,7 @@ swiped = 0;
 function Update () {
 	if (gameOver == true){
 		//Debug.Log ("game over man, game over!");
-			Debug.Log("Scarecrow "+scarecrowScore+", Pig "+pigScore);
+		Debug.Log("Scarecrow "+scarecrowScore+", Pig "+pigScore);
 	}
 	  if (swiped>0){
     swiped --;

@@ -27,9 +27,9 @@
     var speed : float = 9.0;
     var scarecrowRadius = 1;
     var cowardice : int = 10;
-    var pigHP : int = 3;
+
     var randomWalkDistance : int = 42;
- 
+    private var pigHP : int = 5;
     private var targetHeading : Vector3;
     private var currentHeading : Vector3;
     private var targetwaypoint : int;
@@ -53,12 +53,12 @@
     // Use this for initialization
 
     function SetTarget(){
-        Debug.Log("Headed Towards truffle number "+target);
+      //  Debug.Log("Headed Towards truffle number "+target);
         target = waypoints[targetwaypoint].position;
     }
     function NegativeTarget(){
         currentHeading = -currentHeading;
-        Debug.Log("Turning Around");
+       // Debug.Log("Turning Around");
     }
     function TargetScarecrow(){
         target = scarecrow.transform.position;
@@ -96,10 +96,10 @@
     function FinishTruffle(){
         if (GameStates.swiped==0){
             Debug.Log("I Finished A Truffle, it was number "+targetwaypoint);
-            pigHP++;
             var clipPick = Random.Range(0,2);
             gulp[clipPick].Play();
             GameStates.pigScore ++;
+            gameGUI.gankedCount ++;
         }
     else {
         Debug.Log ("I didn't get a truffle :("); 
@@ -112,6 +112,7 @@
         if(targetwaypoint>=waypoints.Length)
         {
              animation.Play("pig_idle");
+             Debug.Log("I think the game's over, because, my target waypoint is"+targetwaypoint);
             EndGame();
         }
         else{
@@ -125,8 +126,10 @@
         var clipPick = Random.Range(0,2);
         squeal[clipPick].Play();
         pigHP--;
+        gameGUI.pigHeartState++;
         Debug.Log("HP down to "+pigHP);
         TurnAway();
+        gameGUI.pigHeartState++;
         SendMessage("invincible",cowardice);
 //        NextTruffle();
     }
